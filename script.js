@@ -1,21 +1,48 @@
-import { ListItem } from "./listItem.js";
-
 let list
-let listContainer = document.getElementById(`listContainer`)
+let listContainer
 
-list = createList()
+let refreashList = {
+    create: createList(),
+    purch: function(){
+        let currentList = document.querySelectorAll(`purchItems`)
+        listContainer = document.getElementsByClassName(`listContainer`)
+        list.purch.forEach(item => {
+            currentList.forEach(current => {
+                if(item === current) return
+            });
+            let newItem = document.createElement(`div`) //Temp element
+            newItem.innerHTML = item
+            listContainer.append(newItem)
+        });
+    },
+    unpurch: function(){
+        let currentList = document.querySelectorAll(`purchItems`)
+        listContainer = document.getElementsByClassName(`listContainer`)
+        list.purch.forEach(item => {
+            currentList.forEach(current => {
+                if(item === current) return
+            });
+            let newItem = document.createElement(`div`) //Temp element
+            newItem.innerHTML = item
+            listContainer.append(newItem)
+        });
+    }
+}
+
+list = refreashList.create
 
 function createList(){
+    listContainer = document.getElementsByClassName(`listContainer`)
     let listArr = []
-    document.quearySelectorAll(`items`).forEach(item => {
+    document.querySelectorAll(`items`).forEach(item => {
         item.remove()
     });
     let purchasedArr = []
-    document.quearySelectorAll(`purchItems`).forEach(item => {
+    document.querySelectorAll(`purchItems`).forEach(item => {
         item.remove()
     });
     let unpurchasedArr = []
-    document.quearySelectorAll(`unpurchItems`).forEach(item => {
+    document.querySelectorAll(`unpurchItems`).forEach(item => {
         item.remove()
     });
     return {
@@ -60,7 +87,7 @@ listItems.addEventListener(`click`, function(listItem){
     return
 })
 
-const template = document.getElementById('reenterTemplate');
+const template = document.getElementById('re-enterTemplate');
 const clonedContent = template.content.cloneNode(true);
 let tempItem
 listItems.addEventListener(`dblclick`, function(listItem){
@@ -75,9 +102,11 @@ listItems.addEventListener(`dblclick`, function(listItem){
     let inputField = document.getElementById(`inputField`)
     inputField.value = listItem.innerText
 })
-function commitChange(btn){
+function commitChange(btn){ 
     let changeContainer = btn.parentElement()
-    let commitItem = document.createElement(`div`)
-    commitItem.innerHTML = tempItem.innerHTML
+    let commitItem = document.createElement(`div`) //Temp element
+    commitItem.value = tempItem.value
     changeContainer.replaceWith(commitItem)
+    list.total[list.total.indexOf(tempItem.value)] = commitItem.value
+    list.unpurch[list.unpurch.indexOf(tempItem.value)] = commitItem.value
 }

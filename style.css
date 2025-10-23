@@ -1,0 +1,25 @@
+.notepad-container {
+    background-color: #fff;     
+    background-image: 
+        linear-gradient(#eee .1em, transparent .1em),
+                linear-gradient(90deg,
+            transparent 79px,
+            #abced4 79px,
+            #8cc7d2 81px,
+            transparent 81px);
+    background-repeat:
+        repeat,     
+        no-repeat;  
+    background-size: 
+        100% 2em,  
+        100% 100%;  
+    background-position:
+        0 1.8em,    
+        0 0;        
+    line-height: 2em;
+    padding-left: 85px; 
+    padding-top: 0.1em; 
+    font-family: 'Comic Sans MS', 'Chalkduster', 'cursive';
+    border: 1px solid #ccc;
+    min-height: 200px; 
+}

@@ -5,10 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly Grocery List</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    
+<div class="notepad-container">
+<button class="all items">All items</button>
+<button class="purchased items">Purchased items</button>
+<button class="unpurchased items">Unpurchased items</button>
+
+<form id="addItemForm">
+<input type="text" id="itemInput" placeholder="Enter item" required>
+<button type="submit">Add Item</button>
+</form>
+
+<ul id="groceryList">
+
+</ul>
+</div>
+<script src="script.js"></script>
 </body>
 
 </html>

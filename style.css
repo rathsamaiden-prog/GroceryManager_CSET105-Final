@@ -11,7 +11,7 @@ body {
     overflow: hidden;
 }
 
-.notepad-container {
+#notepad-container {
     background-color: #fff;
     background-image:
         linear-gradient(#eee .1em, transparent .1em),
@@ -32,7 +32,7 @@ body {
     line-height: 2em;
     font-family: 'Comic Sans MS', 'Chalkduster', 'cursive';
     border: 1px solid #ccc;
-    min-height: 200px;
+    min-height: 80vh;
     max-width: 500px;
     margin: 40px auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -41,6 +41,6 @@ body {
 }
 
 .button-container {
-margin-left: 177px;
+    margin-left: 177px;
 }
 

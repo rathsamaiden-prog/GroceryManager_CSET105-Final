@@ -1,112 +1,104 @@
-let list
+let list = {}
 let listContainer
+const notepad = document.getElementById(`notepad-container`)
+let activeView = `groceryList`
 
-let refreashList = {
-    create: createList(),
-    purch: function(){
-        let currentList = document.querySelectorAll(`purchItems`)
-        listContainer = document.getElementsByClassName(`listContainer`)
-        list.purch.forEach(item => {
-            currentList.forEach(current => {
-                if(item === current) return
-            });
-            let newItem = document.createElement(`div`) //Temp element
-            newItem.innerHTML = item
-            listContainer.append(newItem)
-        });
-    },
-    unpurch: function(){
-        let currentList = document.querySelectorAll(`purchItems`)
-        listContainer = document.getElementsByClassName(`listContainer`)
-        list.purch.forEach(item => {
-            currentList.forEach(current => {
-                if(item === current) return
-            });
-            let newItem = document.createElement(`div`) //Temp element
-            newItem.innerHTML = item
-            listContainer.append(newItem)
-        });
-    }
-}
+let refreashList = {}
 
-list = refreashList.create
+let listTemplate = document.getElementById('listTemplate');
+let clonedGroceryList = listTemplate.content.cloneNode(true);
+notepad.appendChild(clonedGroceryList)
+document.getElementsByTagName(`ul`)[0].id = `groceryList`
+createList()
 
 function createList(){
-    listContainer = document.getElementsByClassName(`listContainer`)
-    let listArr = []
+    listContainer = document.getElementById('groceryList')
+    list.totalArr = []
     document.querySelectorAll(`items`).forEach(item => {
         item.remove()
     });
-    let purchasedArr = []
+    list.purchasedArr = []
     document.querySelectorAll(`purchItems`).forEach(item => {
         item.remove()
     });
-    let unpurchasedArr = []
+    list.unpurchasedArr = []
     document.querySelectorAll(`unpurchItems`).forEach(item => {
         item.remove()
     });
-    return {
-        total: listArr,
-        purch: purchasedArr,
-        unpurch: unpurchasedArr
-    }
+    purchListener()
+}
+function updateList(listID, listObj){
+    let currentList = document.querySelectorAll(listID)
+    listContainer = document.getElementById(activeView)
+    listObj.forEach(item => {
+        currentList.forEach(current => {
+            if(item === current) return
+        });
+        let newItem = document.createElement(`li`)
+        if(listID === `groceryList`){
+            list.purchasedArr.forEach(purchItem =>{
+                if(item === purchItem) item = `<s>${item}</s>`
+            })
+        }
+        newItem.innerHTML = item
+        listContainer.append(newItem)
+    });
+    if(listID === `unpurchList` || listID === `groceryList`) purchListener()
 }
 
 function addItem(){
-    let newItemVal = document.getElementById(`newItemField`).value
-    let newItem = document.createElement(`div`) //Temp element
-    listContainer.append(newItem)
+    let newItemVal = document.getElementById(`itemInput`).value
+    if(checkValue(newItemVal.toLowerCase())) return
+    let newItem = document.createElement(`li`)
+    newItem.className = `listItems`
     newItem.innerHTML = newItemVal
-    list.total.push(newItemVal)
-    list.unpurch.push(newItemVal)
+    listContainer.appendChild(newItem)
+    list.totalArr.push(newItemVal.toLowerCase())
+    list.unpurchasedArr.push(newItemVal.toLowerCase())
+    document.getElementById(`itemInput`).value = ''
+}
+function checkValue(newItem){
+    if(list.totalArr.includes(newItem)){
+        alert(`Item is already included`)
+        document.getElementById(`itemInput`).value = ''
+        return true
+    }
+    return false
 }
 
-let listItems = document.getElementsByClassName(`listItem`)
-let clickTimer = null
-listItems.addEventListener(`click`, function(listItem){
-    //check for dbl click
-    if(clickTimer){
-        clearTimeout(clickTimer)
-        clickTimer = null
-    }else{
-        clickTimer = setTimeout(() => {
-            clickTimer = null
-        }, 250);
-    }
-    //function code
-    if(listItem.innerHTML.includes(`<s>`)) {
-        listItem.innerHTML = `${listItem.innerText}`
-        list.purch.splice(list.purch.indexOf(listItem.innerText), 1)
-        list.unpurch.push(listItem.innerText)
-     }
-    else{
-        listItem.innerHTML = `<s>${listItem.innerText}</s>`
-        list.unpurch.splice(list.unpurch.indexOf(listItem.innerText), 1)
-        list.purch.push(listItem.innerText)
-    }
-    return
-})
+function purchListener(){
+    listContainer.addEventListener(`click`, function(event){
+        const listItem = event.target.closest(`li`)
+        if(listItem.innerHTML.includes(`<s>`)) {
+            listItem.innerHTML = `${listItem.innerText}`
+            list.purchasedArr.splice(list.purchasedArr.indexOf(listItem.innerText), 1)
+            list.unpurchasedArr.push(listItem.innerText.toLowerCase())
+        }
+        else{
+            listItem.innerHTML = `<s>${listItem.innerText}</s>`
+            list.unpurchasedArr.splice(list.unpurchasedArr.indexOf(listItem.innerText), 1)
+            list.purchasedArr.push(listItem.innerText.toLowerCase())
+        }
+        return console.log(`${list.totalArr}\n${list.unpurchasedArr}\n${list.purchasedArr}`)
+    })
+}
 
-const template = document.getElementById('re-enterTemplate');
-const clonedContent = template.content.cloneNode(true);
-let tempItem
-listItems.addEventListener(`dblclick`, function(listItem){
-    //check for dbl click
-    if(clickTimer){
-        clearTimeout(clickTimer)
-        clickTimer = null
-    }
-    //function code
-    tempItem = listItem
-    document.listItem.replaceWith(clonedContent);
-    let inputField = document.getElementById(`inputField`)
-    inputField.value = listItem.innerText
-})
-function commitChange(btn){ 
-    let changeContainer = btn.parentElement()
-    let commitItem = document.createElement(`div`) //Temp element
-    commitItem.value = tempItem.value
-    changeContainer.replaceWith(commitItem)
-    list.total[list.total.indexOf(tempItem.value)] = commitItem.value
-    list.unpurch[list.unpurch.indexOf(tempItem.value)] = commitItem.value
+let submitBtn = document.getElementById(`submitBtn`)
+function switchView(id){
+    document.getElementById(activeView).remove()
+    let template = document.getElementById('listTemplate');
+    let clonedTemplate = template.content.cloneNode(true);  
+    notepad.appendChild(clonedTemplate)
+    document.getElementsByTagName(`ul`)[0].id = `${id}` 
+    activeView = id
+    if(id === `purchList`)
+        refreashList.purch = updateList(id, list.purchasedArr)
+    if(id === `unpurchList`)
+        refreashList.unpurch = updateList(id, list.unpurchasedArr)
+    if(id === `groceryList`)
+        refreashList.total = updateList(`groceryList`, list.totalArr)
+    if(id === `purchList` || id === `unpurchList`)
+        submitBtn.disabled = true
+    else
+        submitBtn.disabled = false;
 }

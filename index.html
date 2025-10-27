@@ -12,23 +12,21 @@
 </head>
 
 <body>
-<div class="notepad-container">   
-    <div class="listContainer">
-<button class="items">All items</button>
-<button class="purchItems">Purchased items</button>
-<button class="unpurchItems">Unpurchased items</button>
+    <div id="notepad-container">   
+        <div class="button-container">
+            <button class="groceryList" onclick="switchView(`groceryList`)">All items</button>
+            <button class="purchList" onclick="switchView(`purchList`)">Purchased items</button>
+            <button class="unpurchList" onclick="switchView(`unpurchList`)">Unpurchased items</button>
+        </div>
+        <div id="addItemForm">
+            <input type="text" id="itemInput" placeholder="Enter item">
+            <button type="submit" onclick="addItem()">Add Item</button>
+        </div>
     </div>
-    <form id="newItemField">
-    <input type="text" id="itemInput" placeholder="Enter item" required>
-    <button type="submit">Add Item</button>
-    </form>
-</div>
+    <template id="listTemplate">
+        <ul></ul>
+    </template>
 
-    
-
-    <ul id="groceryList">
-    </ul>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
